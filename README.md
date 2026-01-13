@@ -1,4 +1,4 @@
-# SecureLens – Privacy Leak Detection & Risk Analysis
+# Privacy Leak Detection & Risk Analysis
 
 A local, read-only system for detecting sensitive data leaks in code and documents using a two-stage NLP pipeline.
 
