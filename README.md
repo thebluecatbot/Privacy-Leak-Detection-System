@@ -1,54 +1,72 @@
-# Ticket Booking Web Application
+# SecureLens – Privacy Leak Detection & Risk Analysis
 
-Simple Flask-based ticket booking app (seat-level booking) with:
-- Flask + SQLAlchemy (SQLite)
-- Flask-Login auth
-- Celery tasks (Redis broker)
-- SMTP email hooks (configured via environment variables)
-- Admin read-only dashboard and CSV export
+A local, read-only system for detecting sensitive data leaks in code and documents using a two-stage NLP pipeline.
 
-## Quick start (local)
+---
 
-1. Create a virtualenv and install dependencies:
-   ```
-   python -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+## Overview
 
-2. Set environment variables (example):
-   ```
-   export FLASK_APP=app.py
-   export FLASK_ENV=development
-   export SECRET_KEY='replace-with-a-secret'
-   export DATABASE_URL='sqlite:///data.db'
-   export CELERY_BROKER_URL='redis://localhost:6379/0'
-   export MAIL_SERVER='smtp.example.com'
-   export MAIL_PORT=587
-   export MAIL_USERNAME='you@example.com'
-   export MAIL_PASSWORD='password'
-   export MAIL_USE_TLS=1
-   ```
+SecureLens is designed to identify privacy and security risks such as:
+- API keys
+- Tokens
+- Email addresses
+- Credentials
+- Contextual secrets hidden in variable names or logic
 
-3. Start Redis (required by Celery) and run Celery worker:
-   ```
-   redis-server
-   celery -A celery_worker.celery worker --loglevel=info
-   ```
+The system never modifies files and never stores data.
 
-4. Initialize the database:
-   ```
-   python -c "from app import init_db; init_db()"
-   ```
+---
 
-5. Run the Flask app:
-   ```
-   flask run
-   ```
+## How It Works
 
-6. Open http://127.0.0.1:5000
+### Stage 1 — Fast Pattern Scan
+Uses regex rules to detect obvious secrets such as:
+- Emails
+- Tokens
+- API keys
+- Password patterns  
 
-## Notes / Limitations
-- Uses SQLite for local testing; not suited for high concurrency.
-- Celery requires a broker (Redis recommended).
-- Passwords are hashed but this is a simple example; review security before production.
+This stage is cheap and filters most cases quickly.
+
+### Stage 2 — LLM Semantic Scan
+Only suspicious segments are sent to an LLM to detect:
+- Conceptual leaks
+- Hardcoded secrets hidden in variable context
+- Indirect credential exposure
+
+This minimizes API usage while preserving high recall.
+
+---
+
+## Privacy Guarantees
+
+- Runs locally
+- Read-only analysis
+- No file modification
+- No data persistence
+- No automatic sanitization
+
+---
+
+## Output
+
+SecureLens generates explainable risk reports that:
+- Highlight risky code segments
+- Explain why they are risky
+- Provide human-review recommendations
+
+---
+
+## Use Cases
+
+- Code audits
+- Pre-deployment checks
+- Developer self-review
+- Compliance validation
+
+---
+
+## Domain
+
+Applied NLP, Static Analysis, Responsible AI, Developer Tooling
+
